@@ -1,0 +1,25 @@
+import matplotlib.pyplot as plt # type: ignore
+import numpy as np # type: ignore
+
+def generate_fibonacci(n_terms):
+    fib_series = [0, 1]
+    if n_terms <= 2:
+        return fib_series[:n_terms]
+    for i in range(2, n_terms):
+        next_term = fib_series[-1] + fib_series[-2]
+        fib_series.append(next_term)
+    return fib_series
+
+def plot_fibonacci(series):   
+    fib_array = np.array(series)
+    
+    plt.plot(fib_array,marker='o',color='k',linewidth='0.5')
+    plt.title("Fibonacci Series Plot")
+    plt.xlabel("Term Index")
+    plt.ylabel("Fibonacci Value")
+    plt.show()
+
+num_terms = int(input("Enter the number of terms : "))
+fib_sequence = generate_fibonacci(num_terms)
+print(f"Fibonacci sequence with {num_terms} terms: {fib_sequence}")
+plot_fibonacci(fib_sequence)

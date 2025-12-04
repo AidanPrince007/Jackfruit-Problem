@@ -1,0 +1,125 @@
+import tkinter as tk
+from tkinter import messagebox
+import random, copy
+
+# ---------------- SUDOKU LOGIC ---------------- #
+
+def is_valid(board, row, col, num):
+    if num in board[row]:
+        return False
+    for r in range(9):
+        if board[r][col] == num:
+            return False
+    sr = (row // 3) * 3
+    sc = (col // 3) * 3
+    for r in range(sr, sr + 3):
+        for c in range(sc, sc + 3):
+            if board[r][c] == num:
+                return False
+    return True
+
+def solve(board):
+    for r in range(9):
+        for c in range(9):
+            if board[r][c] == 0:
+                for num in range(1, 10):
+                    if is_valid(board, r, c, num):
+                        board[r][c] = num
+                        if solve(board):
+                            return True
+                        board[r][c] = 0
+                return False
+    return True
+
+def fill_board(board):
+    for r in range(9):
+        for c in range(9):
+            if board[r][c] == 0:
+                nums = list(range(1, 10))
+                random.shuffle(nums)
+                for num in nums:
+                    if is_valid(board, r, c, num):
+                        board[r][c] = num
+                        if fill_board(board):
+                            return True
+                        board[r][c] = 0
+                return False
+    return True
+
+def generate_puzzle(remove_count=40):
+    board = [[0]*9 for _ in range(9)]
+    fill_board(board)
+    puzzle = copy.deepcopy(board)
+
+    removed = 0
+    while removed < remove_count:
+        r, c = random.randint(0, 8), random.randint(0, 8)
+        if puzzle[r][c] != 0:
+            backup = puzzle[r][c]
+            puzzle[r][c] = 0
+            test = copy.deepcopy(puzzle)
+            if not solve(test):
+                puzzle[r][c] = backup
+            else:
+                removed += 1
+    return puzzle
+
+
+# ---------------- TKINTER UI ---------------- #
+
+class SudokuUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Sudoku")
+
+        self.entries = [[None for _ in range(9)] for _ in range(9)]
+
+        self.frame = tk.Frame(root, bg="black")
+        self.frame.pack(padx=10, pady=10)
+
+        self.make_grid()
+        self.load_new_puzzle()
+
+        tk.Button(root, text="Generate New Puzzle", command=self.load_new_puzzle,
+                  font=("Arial", 14), width=20).pack(pady=10)
+
+    def make_grid(self):
+        for r in range(9):
+            for c in range(9):
+                border = 2 if (r % 3 == 0 and r != 0) else 1
+                border2 = 2 if (c % 3 == 0 and c != 0) else 1
+
+                e = tk.Entry(
+                    self.frame,
+                    width=2,
+                    font=("Arial", 20),
+                    justify='center',
+                    bd=0,
+                    highlightthickness=1,
+                    highlightbackground="black",
+                    highlightcolor="black",
+                )
+                e.grid(row=r, column=c, padx=(border2, 0), pady=(border, 0))
+                self.entries[r][c] = e
+
+    def load_new_puzzle(self):
+        puzzle = generate_puzzle(remove_count=40)
+
+        for r in range(9):
+            for c in range(9):
+                cell = self.entries[r][c]
+                cell.delete(0, tk.END)
+
+                if puzzle[r][c] != 0:
+                    cell.insert(0, str(puzzle[r][c]))
+                    cell.config(state="disabled", disabledforeground="black")
+                else:
+                    cell.config(state="normal")
+
+
+
+# ---------------- RUN APP ---------------- #
+
+root = tk.Tk()
+app = SudokuUI(root)
+root.mainloop()
