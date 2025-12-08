@@ -122,4 +122,5 @@ class SudokuUI:
 
 root = tk.Tk()
 app = SudokuUI(root)
+
 root.mainloop()
