@@ -27,8 +27,3 @@ if __name__ == "__main__":
 	print(primes)
 
 	visualize_primes(primes, limit)
-	
-
-
-
-
