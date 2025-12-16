@@ -1,3 +1,4 @@
+        
 import tkinter as tk
 from tkinter import messagebox
 
@@ -17,51 +18,11 @@ def magic_square_odd(n):
     return square
 
 
-def magic_square_doubly_even(n):
-    square = [[(i*n) + j + 1 for j in range(n)] for i in range(n)]
-
-    for i in range(n):
-        for j in range(n):
-            if (i % 4 == j % 4) or ((i % 4 + j % 4) == 3):
-                square[i][j] = (n*n + 1) - square[i][j]
-    return square
-
-
-def magic_square_singly_even(n):
-    half = n // 2
-    sub_square = magic_square_odd(half)
-
-    square = [[0]*n for _ in range(n)]
-    add = [0, 2*half*half, 3*half*half, half*half]
-
-    # Place the 4 sub-squares
-    for r in range(half):
-        for c in range(half):
-            square[r][c] = sub_square[r][c] + add[0]
-            square[r][c + half] = sub_square[r][c] + add[1]
-            square[r + half][c] = sub_square[r][c] + add[2]
-            square[r + half][c + half] = sub_square[r][c] + add[3]
-
-    # Swap columns
-    k = half // 2
-    for r in range(half):
-        for c in range(k):
-            square[r][c], square[r + half][c] = square[r + half][c], square[r][c]
-
-    c = k
-    for r in range(half):
-        square[r][c], square[r + half][c] = square[r + half][c], square[r][c]
-
-    return square
-
-
 def generate_magic_square(n):
     if n % 2 == 1:
         return magic_square_odd(n)
-    elif n % 4 == 0:
-        return magic_square_doubly_even(n)
     else:
-        return magic_square_singly_even(n)
+        pass
 
 
 # ------------------ GUI ------------------ #
@@ -117,17 +78,7 @@ print("Odd Magic Square (n = 5):")
 sq1 = magic_square_odd(5)
 for row in sq1:
     print(row)
-
-print("\nDoubly Even Magic Square (n = 8):")
-sq2 = magic_square_doubly_even(8)
-for row in sq2:
-    print(row)
-
-print("\nSingly Even Magic Square (n = 6):")
-sq3 = magic_square_singly_even(6)
-for row in sq3:
-    print(row)
-
+    
 print("\nAuto Generate (Any n):  n = 15")
 sq4 = generate_magic_square(15)
 for row in sq4:
