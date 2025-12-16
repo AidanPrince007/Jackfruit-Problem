@@ -1,4 +1,3 @@
-        
 import tkinter as tk
 from tkinter import messagebox
 
@@ -83,3 +82,4 @@ print("\nAuto Generate (Any n):  n = 15")
 sq4 = generate_magic_square(15)
 for row in sq4:
     print(row)
+
